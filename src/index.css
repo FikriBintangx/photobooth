@@ -890,7 +890,9 @@ body {
 }
 
 .preview-container {
-  width: 100%;
+  width: auto;
+  height: 50vh;
+  max-height: 380px;
   aspect-ratio: 3 / 4;
   border-radius: 16px;
   overflow: hidden;
