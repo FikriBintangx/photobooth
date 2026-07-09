@@ -29,14 +29,14 @@ function App() {
 
   const handleVerifyPin = (e) => {
     e.preventDefault();
-    if (pinInput === '1234') { // Default Admin PIN
+    if (pinInput === 'rara bau') { // Updated Admin Password
       setIsAdminMode(true);
       setShowPinModal(false);
       setPinInput('');
       setPinError('');
       setCurrentView('manage-frames');
     } else {
-      setPinError('PIN salah! Silakan coba lagi.');
+      setPinError('Password salah! Silakan coba lagi.');
       setPinInput('');
     }
   };
@@ -148,33 +148,30 @@ function App() {
         </span>
       </footer>
 
-      {/* PIN Verification Modal */}
+      {/* Password Verification Modal */}
       {showPinModal && (
         <div className="modal-overlay">
           <div className="modal-content glass" style={{ padding: '2rem', maxWidth: '360px' }}>
             <div className="modal-header">
-              <h3 className="modal-title">Masukkan PIN Admin</h3>
-              <p className="modal-subtitle">Gunakan PIN default "1234" untuk login</p>
+              <h3 className="modal-title">Masukkan Password Admin</h3>
+              <p className="modal-subtitle">Gunakan password Anda untuk masuk</p>
             </div>
             
             <form onSubmit={handleVerifyPin} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <input 
                 type="password" 
-                maxLength="4"
-                placeholder="••••"
+                placeholder="Masukkan password..."
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
+                  padding: '0.75rem 1rem',
                   borderRadius: '8px',
                   border: '1px solid var(--border-glass)',
                   background: 'rgba(255,255,255,0.03)',
                   color: 'white',
-                  fontFamily: 'monospace',
-                  fontSize: '1.5rem',
-                  textAlign: 'center',
-                  letterSpacing: '10px'
+                  fontSize: '1.05rem',
+                  textAlign: 'center'
                 }}
                 autoFocus
               />
