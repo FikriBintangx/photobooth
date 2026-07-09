@@ -494,12 +494,14 @@ body {
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
   border: 4px solid white;
   background: #eaeaea;
+  isolation: isolate;
 }
 
 .camera-stream {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: inherit;
 }
 
 .camera-stream.mirrored {
@@ -514,12 +516,14 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 10;
+  border-radius: inherit;
 }
 
 .frame-overlay-img {
   width: 100%;
   height: 100%;
   object-fit: fill;
+  border-radius: inherit;
 }
 
 .countdown-overlay {
