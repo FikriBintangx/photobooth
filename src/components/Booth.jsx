@@ -111,6 +111,8 @@ export default function Booth({ onBack }) {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [finalResultUrl, setFinalResultUrl] = useState('');
   const [showFinalModal, setShowFinalModal] = useState(false);
+  const [boomerangVideoUrl, setBoomerangVideoUrl] = useState('');
+  const [showBoomerangPreview, setShowBoomerangPreview] = useState(false);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -375,13 +377,120 @@ export default function Booth({ onBack }) {
               ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
 
               setFinalResultUrl(canvas.toDataURL('image/png'));
-              setShowFinalModal(true);
-              setCurrentPoseIndex(-1);
+              
+              generateBoomerangVideo(photos).then((url) => {
+                setBoomerangVideoUrl(url);
+                setShowFinalModal(true);
+                setCurrentPoseIndex(-1);
+              });
             }
           };
         });
       }
     };
+  };
+
+  const generateBoomerangVideo = (photos) => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 600;
+      canvas.height = 800;
+
+      const imgObjects = [];
+      let loaded = 0;
+
+      const startRecording = () => {
+        let stream;
+        try {
+          stream = canvas.captureStream(6); // 6 FPS
+        } catch (e) {
+          console.warn('Canvas captureStream not supported in this browser.');
+          resolve('');
+          return;
+        }
+
+        let mediaRecorder;
+        try {
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+        } catch (e) {
+          try {
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+          } catch (err) {
+            console.warn('MediaRecorder not supported or failed to initialize.');
+            resolve('');
+            return;
+          }
+        }
+
+        const chunks = [];
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) {
+            chunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          resolve(URL.createObjectURL(blob));
+        };
+
+        mediaRecorder.start();
+
+        const frameSequence = [0, 1, 2, 3, 2, 1];
+        let currentFrameIndex = 0;
+
+        const drawNextFrame = () => {
+          if (currentFrameIndex >= frameSequence.length) {
+            if (mediaRecorder.state !== 'inactive') {
+              mediaRecorder.stop();
+            }
+            return;
+          }
+
+          const photoIdx = frameSequence[currentFrameIndex];
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          const img = imgObjects[photoIdx];
+          const paddingLeft = 30;
+          const paddingTop = 30;
+          const photoWidth = 540;
+          const photoHeight = 720;
+
+          const sourceWidth = img.height * (3 / 4);
+          const sourceX = (img.width - sourceWidth) / 2;
+          ctx.drawImage(img, sourceX, 0, sourceWidth, img.height, paddingLeft, paddingTop, photoWidth, photoHeight);
+
+          const frameImg = new Image();
+          frameImg.crossOrigin = 'anonymous';
+          frameImg.src = selectedFrame.dataUrl;
+          frameImg.onload = () => {
+            ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+            currentFrameIndex++;
+            setTimeout(drawNextFrame, 350);
+          };
+          frameImg.onerror = () => {
+            currentFrameIndex++;
+            setTimeout(drawNextFrame, 350);
+          };
+        };
+
+        drawNextFrame();
+      };
+
+      photos.forEach((src, idx) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => {
+          imgObjects[idx] = img;
+          loaded++;
+          if (loaded === photos.length) {
+            startRecording();
+          }
+        };
+      });
+    });
   };
 
   const handleDownload = () => {
@@ -391,10 +500,20 @@ export default function Booth({ onBack }) {
     link.click();
   };
 
+  const handleDownloadBoomerang = () => {
+    if (!boomerangVideoUrl) return;
+    const link = document.createElement('a');
+    link.download = `photobooth-boomerang-${Date.now()}.webm`;
+    link.href = boomerangVideoUrl;
+    link.click();
+  };
+
   const handleCancelSession = () => {
     stopCamera();
     setPaymentStatus('unpaid');
     setCapturedPhotos([]);
+    setBoomerangVideoUrl('');
+    setShowBoomerangPreview(false);
     if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
   };
 
@@ -870,10 +989,40 @@ export default function Booth({ onBack }) {
                   </p>
                 </div>
 
+                {/* Toggle tab for Boomerang if 4-grid and URL exists */}
+                {boothMode === '4-grid' && boomerangVideoUrl && (
+                  <div style={{ display: 'flex', background: 'rgba(0,0,0,0.05)', borderRadius: '30px', padding: '4px', gap: '4px', marginBottom: '0.5rem' }}>
+                    <button 
+                      onClick={() => setShowBoomerangPreview(false)}
+                      style={{ padding: '0.4rem 1.2rem', borderRadius: '25px', border: 'none', background: !showBoomerangPreview ? 'white' : 'transparent', fontWeight: !showBoomerangPreview ? 800 : 500, color: !showBoomerangPreview ? 'var(--primary)' : 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.8rem', transition: 'all 0.2s' }}
+                    >
+                      Foto Kolase
+                    </button>
+                    <button 
+                      onClick={() => setShowBoomerangPreview(true)}
+                      style={{ padding: '0.4rem 1.2rem', borderRadius: '25px', border: 'none', background: showBoomerangPreview ? 'white' : 'transparent', fontWeight: showBoomerangPreview ? 800 : 500, color: showBoomerangPreview ? 'var(--primary)' : 'var(--text-secondary)', cursor: 'pointer', fontSize: '0.8rem', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                    >
+                      <span className="live-badge" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }}></span>
+                      Live Boomerang
+                    </button>
+                  </div>
+                )}
+
                 {/* Final Collage Card Container */}
                 <div className="glass" style={{ padding: '1.5rem', width: '100%', maxWidth: '480px', display: 'flex', justifyContent: 'center', background: 'white', boxShadow: '0 10px 30px rgba(0,0,0,0.06)' }}>
-                  <div style={{ width: '100%', maxWidth: '300px', aspectRatio: boothMode === '1-shot' ? '3/4' : '6/18', overflow: 'hidden', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.08)' }}>
-                    <img src={finalResultUrl} alt="Final Collage" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  <div style={{ width: '100%', maxWidth: '300px', aspectRatio: showBoomerangPreview ? '3/4' : (boothMode === '1-shot' ? '3/4' : '6/18'), overflow: 'hidden', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                    {showBoomerangPreview ? (
+                      <video 
+                        src={boomerangVideoUrl} 
+                        autoPlay 
+                        loop 
+                        muted 
+                        playsInline 
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                      />
+                    ) : (
+                      <img src={finalResultUrl} alt="Final Collage" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    )}
                   </div>
                 </div>
 
@@ -918,6 +1067,26 @@ export default function Booth({ onBack }) {
                     <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111' }}>Unduh Hasil Foto</h3>
                     <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Pilih format yang ingin Anda unduh</p>
                   </div>
+
+                  {/* Boomerang Card */}
+                  {boothMode === '4-grid' && boomerangVideoUrl && (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', border: '1px solid rgba(34,197,94,0.2)', borderRadius: '12px', background: '#f0fdf4' }}>
+                      <div>
+                        <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#166534', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <span className="live-badge" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: '#22c55e' }}></span>
+                          Live Boomerang (MP4)
+                        </h4>
+                        <p style={{ fontSize: '0.75rem', color: '#166534', opacity: 0.85 }}>Video animasi bergerak</p>
+                      </div>
+                      <button onClick={handleDownloadBoomerang} className="nav-button-primary" style={{ padding: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#22c55e', border: 'none' }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <polyline points="7 10 12 15 17 10"></polyline>
+                          <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  )}
 
                   {/* PNG Card */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '12px', background: '#fafafa' }}>
@@ -982,7 +1151,7 @@ export default function Booth({ onBack }) {
                     </div>
 
                     {/* Retake/New Session */}
-                    <div onClick={() => { setShowFinalModal(false); setFinalResultUrl(''); setPaymentStatus('unpaid'); }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '10px', background: '#ffffff', cursor: 'pointer' }}>
+                    <div onClick={() => { setShowFinalModal(false); setFinalResultUrl(''); setBoomerangVideoUrl(''); setShowBoomerangPreview(false); setPaymentStatus('unpaid'); }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '10px', background: '#ffffff', cursor: 'pointer' }}>
                       <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5">
                           <path d="M23 4v6h-6"></path>
