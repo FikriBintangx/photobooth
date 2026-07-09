@@ -30,36 +30,22 @@ const FILTERS = [
   { id: 'cinematic', name: 'Cinematic', filter: 'contrast(130%) saturate(80%) brightness(90%)' }
 ];
 
-const PACKAGES = [
-  {
-    id: '1-shot',
-    name: 'Polaroid Classic',
-    price: 15000,
-    desc: '1 pose foto dengan format polaroid klasik berkualitas tinggi.',
-    grid: '1-shot'
-  },
-  {
-    id: '4-grid',
-    name: 'Cyber Neon Strip',
-    price: 25000,
-    desc: '4 pose foto kolase beruntun bergaya Korean Photobooth.',
-    grid: '4-grid'
-  }
-];
+const PHOTO_PRICE = 20000; // Flat price Rp 20.000 for any photo session
 
 export default function Booth({ onBack }) {
   // Payment States
   const [paymentStatus, setPaymentStatus] = useState('unpaid'); // 'unpaid' | 'pending' | 'paid'
-  const [selectedPackage, setSelectedPackage] = useState(null);
   const [orderId, setOrderId] = useState('');
   const [uniqueAmount, setUniqueAmount] = useState(0);
   const [checkingPayment, setCheckingPayment] = useState(false);
 
-  // Booth States
+  // Selection States
   const [frames, setFrames] = useState(DEFAULT_FRAMES);
   const [selectedFrame, setSelectedFrame] = useState(DEFAULT_FRAMES[0]);
+  const [boothMode, setBoothMode] = useState('4-grid'); // '1-shot' | '4-grid'
   const [selectedFilter, setSelectedFilter] = useState(FILTERS[0]);
   
+  // Camera/Webcam States
   const [countdown, setCountdown] = useState(0);
   const [countdownSetting, setCountdownSetting] = useState(3);
   
@@ -128,11 +114,10 @@ export default function Booth({ onBack }) {
   };
 
   // Payment checkout initiator
-  const handleSelectPackage = async (pkg) => {
-    setSelectedPackage(pkg);
+  const handleProceedToPayment = async () => {
     const newOrderId = `GLOW-${Date.now().toString().slice(-6)}`;
     const randomCent = Math.floor(Math.random() * 99) + 1; // 1-99 cents for uniqueness
-    const finalAmount = pkg.price + randomCent;
+    const finalAmount = PHOTO_PRICE + randomCent;
 
     setOrderId(newOrderId);
     setUniqueAmount(finalAmount);
@@ -147,14 +132,13 @@ export default function Booth({ onBack }) {
           order_id: newOrderId,
           amount: finalAmount,
           user_email: 'customer@photobooth.local',
-          description: `PhotoBooth Paket ${pkg.name}`
+          description: `PhotoBooth Frame ${selectedFrame.name} (${boothMode === '1-shot' ? 'Single' : 'Grid'})`
         })
       });
     } catch (e) {
       console.log('Skipping backend registration (using offline mode / sandbox simulation).');
     }
 
-    // Start polling payment status from Hugging Face Space
     startPaymentPolling(finalAmount);
   };
 
@@ -167,7 +151,6 @@ export default function Booth({ onBack }) {
         const response = await fetch('https://87nvlion-jurnalku-backend.hf.space/api/payment/phone-status');
         if (response.ok) {
           const data = await response.json();
-          // Check if any matching verified notifications in history
           const history = data.history || [];
           const match = history.find(n => n.amount === amount && n.matched === true);
           if (match) {
@@ -190,7 +173,6 @@ export default function Booth({ onBack }) {
   // Manual payment trigger for offline/sandbox testing
   const simulatePaymentSuccess = async () => {
     try {
-      // Hit backend manual-verify endpoint
       await fetch('https://87nvlion-jurnalku-backend.hf.space/api/payment/manual-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -262,7 +244,7 @@ export default function Booth({ onBack }) {
     setShowPreviewModal(false);
     setPendingPhoto(null);
 
-    const totalNeeded = selectedPackage.grid === '4-grid' ? 4 : 1;
+    const totalNeeded = boothMode === '4-grid' ? 4 : 1;
     
     if (updatedPhotos.length < totalNeeded) {
       triggerNextCapture(index + 1, updatedPhotos);
@@ -287,7 +269,7 @@ export default function Booth({ onBack }) {
     frameImg.src = selectedFrame.dataUrl;
 
     frameImg.onload = () => {
-      if (selectedPackage.grid === '1-shot') {
+      if (boothMode === '1-shot') {
         canvas.width = 1200;
         canvas.height = 1600;
 
@@ -358,7 +340,6 @@ export default function Booth({ onBack }) {
   const handleCancelSession = () => {
     stopCamera();
     setPaymentStatus('unpaid');
-    setSelectedPackage(null);
     setCapturedPhotos([]);
     if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
   };
@@ -368,51 +349,85 @@ export default function Booth({ onBack }) {
     `00020101021226570011ID.DANA.WWW011893600915000000208302090000020830303UMI51440014ID.CO.QRIS.WWW0215ID10265163834230303UMI5204654053033605405500005802ID5912TOKO BINTANG60040204610515710621960150011ID.DANA.WWW63047E69`
   )}`;
 
-  // RENDER STEP 1: Package Selector
+  // RENDER STEP 1: Frame & Layout Selector (Unpaid)
   if (paymentStatus === 'unpaid') {
     return (
-      <div className="admin-container" style={{ textAlign: 'center', marginTop: '3rem' }}>
-        <h2 className="text-gradient-neon" style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
-          Pilih Paket Photobooth
-        </h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-          Silakan pilih paket foto Anda untuk memulai sesi otomatis.
-        </p>
+      <div className="admin-container" style={{ marginTop: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 className="text-gradient-neon" style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+            Pilih Frame & Format Foto
+          </h2>
+          <p style={{ color: 'var(--text-secondary)' }}>
+            Silakan tentukan frame favorit Anda serta layout foto sebelum melanjutkan ke pembayaran.
+          </p>
+        </div>
 
-        <div className="features-grid" style={{ marginBottom: '2.5rem' }}>
-          {PACKAGES.map((pkg) => (
-            <div 
-              key={pkg.id} 
-              className="feature-card glass" 
-              style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '260px' }}
-              onClick={() => handleSelectPackage(pkg)}
-            >
-              <div>
-                <div className="feature-icon" style={{ margin: '0 auto 1.25rem auto' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem' }}>
+          {/* Frame List */}
+          <div className="glass" style={{ padding: '1.5rem' }}>
+            <h3 className="section-title">Koleksi Frame</h3>
+            <div className="frame-grid" style={{ maxHeight: 'none', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '1rem' }}>
+              {frames.map((frame) => (
+                <div
+                  key={frame.id}
+                  onClick={() => setSelectedFrame(frame)}
+                  className={`frame-item ${selectedFrame.id === frame.id ? 'active' : ''}`}
+                  style={{ transform: selectedFrame.id === frame.id ? 'scale(1.02)' : 'none' }}
+                >
+                  <img src={frame.dataUrl} className="frame-thumb" alt={frame.name} />
+                  <span className="frame-item-name">{frame.name}</span>
                 </div>
-                <h3 className="feature-title" style={{ textAlign: 'center' }}>{pkg.name}</h3>
-                <p className="feature-desc" style={{ textAlign: 'center', marginTop: '0.5rem' }}>{pkg.desc}</p>
-              </div>
-              <div style={{ marginTop: '1.5rem' }}>
-                <p style={{ fontSize: '1.75rem', fontWeight: 800, color: 'white', textAlign: 'center' }}>
-                  Rp {pkg.price.toLocaleString('id-ID')}
-                </p>
-                <button className="nav-button-primary" style={{ width: '100%', marginTop: '1rem', borderRadius: '8px' }}>
-                  Pilih Paket
+              ))}
+            </div>
+          </div>
+
+          {/* Format Settings & Order Summary */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div className="glass" style={{ padding: '1.5rem' }}>
+              <h3 className="section-title">Format Kolase</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <button
+                  onClick={() => setBoothMode('4-grid')}
+                  className={`filter-btn ${boothMode === '4-grid' ? 'active' : ''}`}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '12px' }}
+                >
+                  4-Grid Strip (4 Poses)
+                </button>
+                <button
+                  onClick={() => setBoothMode('1-shot')}
+                  className={`filter-btn ${boothMode === '1-shot' ? 'active' : ''}`}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '12px' }}
+                >
+                  1-Shot Polaroid (1 Pose)
                 </button>
               </div>
             </div>
-          ))}
-        </div>
 
-        <button onClick={onBack} className="btn-secondary" style={{ padding: '0.75rem 1.5rem', borderRadius: '10px' }}>
-          Kembali ke Beranda
-        </button>
+            <div className="glass" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3 className="section-title">Ringkasan Sesi</h3>
+              <div style={{ margin: '1rem 0' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Harga Sesi Foto Flat</p>
+                <p style={{ fontSize: '2.25rem', fontWeight: 900, color: 'var(--primary)', margin: '0.2rem 0' }}>
+                  Rp {PHOTO_PRICE.toLocaleString('id-ID')}
+                </p>
+                <p style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                  Frame: {selectedFrame.name}
+                </p>
+              </div>
+              <button 
+                onClick={handleProceedToPayment} 
+                className="nav-button-primary glow-primary" 
+                style={{ width: '100%', padding: '0.8rem', borderRadius: '30px' }}
+              >
+                Bayar Sekarang
+              </button>
+            </div>
+
+            <button onClick={onBack} className="btn-secondary" style={{ padding: '0.75rem', borderRadius: '30px' }}>
+              Batal
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -450,7 +465,6 @@ export default function Booth({ onBack }) {
             </p>
           </div>
 
-          {/* Simulated buttons for client presentation */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
             <button onClick={simulatePaymentSuccess} className="nav-button-primary glow-primary" style={{ padding: '0.75rem', borderRadius: '8px' }}>
               Simulasi Bayar Sukses
@@ -499,7 +513,7 @@ export default function Booth({ onBack }) {
           )}
         </div>
 
-        {selectedPackage?.grid === '4-grid' && (
+        {boothMode === '4-grid' && (
           <div className="pose-slots">
             {[0, 1, 2, 3].map((idx) => {
               let slotClass = 'pose-slot';
@@ -551,12 +565,15 @@ export default function Booth({ onBack }) {
 
       <div className="sidebar">
         <div className="panel-section glass">
-          <h3 className="section-title">Paket Aktif</h3>
-          <p style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
-            {selectedPackage?.name}
+          <h3 className="section-title">Informasi Transaksi</h3>
+          <p style={{ fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--secondary)' }}>
+            Order: {orderId}
           </p>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
-            ID: {orderId}
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
+            Frame Terpilih: {selectedFrame.name}
+          </p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            Format: {boothMode === '1-shot' ? 'Single' : 'Grid'}
           </p>
         </div>
 
@@ -576,7 +593,7 @@ export default function Booth({ onBack }) {
         </div>
 
         <div className="panel-section glass" style={{ flex: 1 }}>
-          <h3 className="section-title">Pilih Frame</h3>
+          <h3 className="section-title">Pilih Frame Baru</h3>
           <div className="frame-grid">
             {frames.map((frame) => (
               <div
@@ -632,7 +649,7 @@ export default function Booth({ onBack }) {
               <p className="modal-subtitle">Kolase fotomu siap diunduh!</p>
             </div>
 
-            <div className="preview-container" style={{ aspectRatio: selectedPackage?.grid === '1-shot' ? '3/4' : '6/18' }}>
+            <div className="preview-container" style={{ aspectRatio: boothMode === '1-shot' ? '3/4' : '6/18' }}>
               <img src={finalResultUrl} className="preview-image" alt="Final Collage" />
             </div>
 
