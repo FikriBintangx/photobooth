@@ -435,55 +435,178 @@ export default function Booth({ onBack }) {
     );
   }
 
-  // RENDER STEP 2: QRIS Payment Portal
+  // RENDER STEP 2: QRIS Payment Portal (Mockup Design)
   if (paymentStatus === 'pending') {
     return (
-      <div className="admin-container" style={{ maxWidth: '460px', marginTop: '2rem' }}>
-        <div className="glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <h3 className="text-gradient-neon" style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.25rem' }}>
-            Pembayaran QRIS
-          </h3>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-            Pindai kode QRIS di bawah ini untuk mengaktifkan kamera.
-          </p>
+      <div className="admin-container" style={{ maxWidth: '1100px', marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        
+        {/* Step Indicator (Breadcrumbs) */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', marginBottom: '1rem', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>1</div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pembayaran</span>
+            </div>
+            <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>2</div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Verifikasi</span>
+            </div>
+            <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-          <div style={{ background: 'white', padding: '1rem', borderRadius: '16px', display: 'inline-block', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', marginBottom: '1.5rem' }}>
-            <img src={mockQrUrl} alt="QRIS Code" style={{ width: '220px', height: '220px' }} />
-          </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>3</div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pilih Frame</span>
+            </div>
+            <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-          <div style={{ width: '100%', padding: '1rem', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-glass)', borderRadius: '10px', marginBottom: '1.5rem' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>TOTAL TRANSFER (HARUS PAS)</p>
-            <p style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--secondary)', letterSpacing: '0.5px', marginTop: '0.25rem' }}>
-              Rp {uniqueAmount.toLocaleString('id-ID')}
-            </p>
-            <p style={{ fontSize: '0.7rem', color: '#ff4444', marginTop: '0.2rem', fontWeight: 600 }}>
-              *3 digit terakhir adalah kode acak verifikasi transaksi Anda.
-            </p>
-          </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>4</div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ambil Foto</span>
+            </div>
+            <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-            <div className="loader-ring" style={{ width: '16px', height: '16px', border: '2.5px solid var(--text-muted)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              {checkingPayment ? 'Memverifikasi transaksi...' : 'Menunggu transfer...'}
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '100%' }}>
-            <button onClick={simulatePaymentSuccess} className="nav-button-primary glow-primary" style={{ padding: '0.75rem', borderRadius: '8px' }}>
-              Simulasi Bayar Sukses
-            </button>
-            <button onClick={handleCancelSession} className="btn-secondary" style={{ padding: '0.75rem', borderRadius: '8px' }}>
-              Batal
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>5</div>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Selesai</span>
+            </div>
           </div>
         </div>
 
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}} />
+        {/* 2 Column Main Panel */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '2.5rem', alignItems: 'start' }}>
+          
+          {/* Left Column: Instruction list */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <h2 style={{ fontSize: '2.25rem', fontWeight: 900, color: '#111', lineHeight: '1.2', marginBottom: '0.75rem' }}>
+                Lakukan Pembayaran Untuk Memulai <span style={{ color: 'var(--primary)' }}>Photo Booth</span>
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                Scan QRIS di samping menggunakan aplikasi pembayaran favorit Anda untuk melanjutkan ke sesi pemotretan.
+              </p>
+            </div>
+
+            <div className="glass" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Cara Kerja
+              </h3>
+
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(229, 26, 36, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>1</div>
+                <div>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>1. Scan QRIS</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Gunakan aplikasi dompet digital atau mobile banking Anda.</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(229, 26, 36, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>2</div>
+                <div>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>2. Lakukan Pembayaran</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Selesaikan transfer pembayaran tepat sesuai nominal yang tertera.</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(229, 26, 36, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>3</div>
+                <div>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>3. Sistem Memverifikasi</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Sistem akan memverifikasi transaksi secara real-time otomatis.</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(229, 26, 36, 0.08)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>4</div>
+                <div>
+                  <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>4. Mulai Photo Booth</h4>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Setelah sukses diverifikasi, kamera studio akan otomatis terbuka!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: QRIS Panel */}
+          <div className="glass" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', borderRadius: '16px', background: '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              Scan QRIS untuk Bayar
+            </h3>
+
+            {/* Nominal Box */}
+            <div style={{ width: '100%', padding: '0.75rem', background: '#fff5f5', border: '1px dashed #ffcccc', borderRadius: '12px', textAlign: 'center' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase' }}>Nominal Pembayaran</p>
+              <p style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--primary)', marginTop: '0.1rem' }}>
+                Rp {uniqueAmount.toLocaleString('id-ID')}
+              </p>
+            </div>
+
+            {/* QR Frame */}
+            <div style={{ background: 'white', padding: '0.75rem', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 4px 15px rgba(0,0,0,0.04)' }}>
+              <img src={mockQrUrl} alt="QRIS Code" style={{ width: '180px', height: '180px', display: 'block' }} />
+            </div>
+
+            {/* Wallet list row */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.4rem', width: '100%' }}>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#E6F0FA', color: '#005CA9' }}>GoPay</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#F0E6FA', color: '#4C1F82' }}>OVO</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#E6FAFF', color: '#118EEA' }}>DANA</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#FFEFE6', color: '#EE4D2D' }}>ShopeePay</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#FFE6E6', color: '#E51A24' }}>LinkAja</span>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, padding: '0.2rem 0.5rem', borderRadius: '20px', background: '#EAF6EA', color: '#2E7D32' }}>Mobile Banking</span>
+            </div>
+
+            {/* Timer Bar */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '0.5rem 0.8rem', background: '#fcfcfc', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.03)' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                QR Code berlaku dalam
+              </span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)' }}>09:58</span>
+            </div>
+
+            {/* Info Message */}
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', background: 'rgba(0,0,0,0.02)', padding: '0.6rem 0.8rem', borderRadius: '8px', width: '100%' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" style={{ flexShrink: 0, marginTop: '2px' }}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <p style={{ fontSize: '0.68rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
+                Setelah pembayaran berhasil, Anda akan otomatis diarahkan ke halaman selanjutnya.
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              <button 
+                onClick={simulatePaymentSuccess} 
+                className="nav-button-primary glow-primary" 
+                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}
+              >
+                Saya Sudah Bayar
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </button>
+              <button 
+                onClick={handleCancelSession} 
+                className="btn-secondary" 
+                style={{ width: '100%', padding: '0.7rem', borderRadius: '8px', fontSize: '0.85rem' }}
+              >
+                Batal
+              </button>
+            </div>
+
+          </div>
+        </div>
       </div>
     );
   }

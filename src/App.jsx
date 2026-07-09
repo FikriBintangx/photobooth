@@ -44,20 +44,50 @@ function App() {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo" onClick={() => setCurrentView('landing')} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <img 
-            src={logoImg} 
-            alt="PicGlow Logo" 
-            style={{ 
-              width: '38px', 
-              height: '38px', 
-              borderRadius: '50%', 
-              objectFit: 'cover',
-              border: '2px solid var(--primary)',
-              boxShadow: '0 4px 10px rgba(229, 26, 36, 0.1)'
-            }} 
-          />
-          <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '1.4rem' }}>PicGlow Booth</span>
+        <div className="logo" onClick={() => setCurrentView('landing')} style={{ display: 'flex', alignItems: 'center', gap: '0.1rem', cursor: 'pointer' }}>
+          <span style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.6rem', letterSpacing: '-1.5px', fontFamily: 'Outfit, sans-serif' }}>POT</span>
+          <div style={{
+            position: 'relative',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '24px',
+            height: '24px',
+            background: 'var(--primary)',
+            borderRadius: '50%',
+            margin: '0 1px'
+          }}>
+            <div style={{
+              width: '16px',
+              height: '16px',
+              background: 'white',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '2px solid var(--primary)'
+            }}>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                background: '#111',
+                borderRadius: '50%',
+                border: '1px solid #666',
+                position: 'relative'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '1px',
+                  left: '1px',
+                  width: '2px',
+                  height: '2px',
+                  background: 'rgba(255,255,255,0.8)',
+                  borderRadius: '50%'
+                }} />
+              </div>
+            </div>
+          </div>
+          <span style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.6rem', letterSpacing: '-1.5px', fontFamily: 'Outfit, sans-serif' }}>BUTH</span>
         </div>
         <div className="nav-links">
           <button 
