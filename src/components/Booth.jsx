@@ -766,44 +766,215 @@ export default function Booth({ onBack }) {
         </div>
       )}
 
-      {/* Final Result Modal */}
+      {/* Final Result View (Mockup Redesign) */}
       {showFinalModal && finalResultUrl && (
-        <div className="modal-overlay">
-          <div className="modal-content glass" style={{ padding: '1.5rem', maxWidth: '440px' }}>
-            <div className="modal-header">
-              <h3 className="modal-title text-gradient">Hasil Akhir</h3>
-              <p className="modal-subtitle">Kolase fotomu siap diunduh!</p>
-            </div>
+        <div className="modal-overlay" style={{ background: '#fcfbfa', overflowY: 'auto', padding: '2rem 1rem' }}>
+          <div style={{ maxWidth: '1100px', width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            
+            {/* Step Indicator (Breadcrumbs) - Step 5 Active */}
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', borderBottom: '1px solid rgba(0,0,0,0.05)', paddingBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>✓</div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pembayaran</span>
+                </div>
+                <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
+                
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>✓</div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Verifikasi</span>
+                </div>
+                <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-            <div className="preview-container" style={{ aspectRatio: boothMode === '1-shot' ? '3/4' : '6/18' }}>
-              <img src={finalResultUrl} className="preview-image" alt="Final Collage" />
-            </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>✓</div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pilih Frame</span>
+                </div>
+                <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-            <button onClick={handleDownload} className="btn-primary btn-block" style={{ marginTop: '1.5rem' }}>
-              Unduh Hasil Foto
-            </button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem', opacity: 0.5 }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#ccc', color: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>4</div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#333', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ambil Foto</span>
+                </div>
+                <div style={{ width: '40px', height: '2px', background: 'rgba(0,0,0,0.1)' }} />
 
-            <div className="share-panel">
-              <div className="qr-code-wrapper">
-                <img 
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent('https://versatiles.vercel.app/download-success')}`} 
-                  className="qr-code" 
-                  alt="Scan QR Code" 
-                />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem' }}>5</div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Selesai</span>
+                </div>
               </div>
-              <div className="share-info">
-                <p className="share-title">Pindai QR Code</p>
-                <p className="share-desc">Pindai kode ini menggunakan kamera HP Anda untuk menyalin foto langsung ke galeri.</p>
+            </div>
+
+            {/* 2 Column Main Panel */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '2.5rem', alignItems: 'start' }}>
+              
+              {/* Left Column: Image Card & Shares */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <h2 style={{ fontSize: '2.25rem', fontWeight: 900, color: '#111', lineHeight: '1.2', marginBottom: '0.5rem' }}>
+                    Foto Anda <span style={{ color: 'var(--primary)' }}>Siap!</span>
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+                    Terima kasih telah menggunakan <span style={{ fontWeight: 700, color: 'var(--primary)' }}>POTOBUTH</span>.
+                  </p>
+                </div>
+
+                {/* Final Collage Card Container */}
+                <div className="glass" style={{ padding: '1.5rem', width: '100%', maxWidth: '480px', display: 'flex', justifyContent: 'center', background: 'white', boxShadow: '0 10px 30px rgba(0,0,0,0.06)' }}>
+                  <div style={{ width: '100%', maxWidth: '300px', aspectRatio: boothMode === '1-shot' ? '3/4' : '6/18', overflow: 'hidden', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.08)' }}>
+                    <img src={finalResultUrl} alt="Final Collage" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                  </div>
+                </div>
+
+                {/* Timer Bar */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.6rem 1.2rem', background: 'rgba(0,0,0,0.02)', borderRadius: '30px', border: '1px solid rgba(0,0,0,0.04)', width: '100%', maxWidth: '480px', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Simpan hasil Anda sebelum link kedaluwarsa
+                  </span>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--primary)', background: '#fff0f0', padding: '0.2rem 0.6rem', borderRadius: '4px' }}>23:59:32</span>
+                </div>
+
+                {/* Social Share Bar */}
+                <div className="glass" style={{ padding: '1.25rem 1.5rem', width: '100%', maxWidth: '480px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderRadius: '16px', background: 'white' }}>
+                  <div>
+                    <h4 style={{ fontSize: '0.85rem', fontWeight: 800, color: '#111' }}>Bagikan momen ini ke teman-temanmu!</h4>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Upload ke media sosial dan tag kami</p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.6rem' }}>
+                    {/* Mock social media links/buttons */}
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F4E8E8', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="Instagram">
+                      <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)' }}>IG</span>
+                    </div>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#eaeaea', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="TikTok">
+                      <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#111' }}>TT</span>
+                    </div>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#EAF6EA', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} title="WhatsApp">
+                      <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#2E7D32' }}>WA</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column: Download List & Action Buttons */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div className="glass" style={{ padding: '2rem', background: 'white', display: 'flex', flexDirection: 'column', gap: '1.25rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111' }}>Unduh Hasil Foto</h3>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Pilih format yang ingin Anda unduh</p>
+                  </div>
+
+                  {/* PNG Card */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '12px', background: '#fafafa' }}>
+                    <div>
+                      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>PNG (HD)</h4>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Kualitas terbaik</p>
+                    </div>
+                    <button onClick={handleDownload} className="nav-button-primary" style={{ padding: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* JPG Card */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '12px', background: '#fafafa' }}>
+                    <div>
+                      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>JPG</h4>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Ukuran lebih kecil</p>
+                    </div>
+                    <button onClick={handleDownload} className="nav-button-primary" style={{ padding: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* PDF Card */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1rem', border: '1px solid rgba(0,0,0,0.05)', borderRadius: '12px', background: '#fafafa' }}>
+                    <div>
+                      <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: '#111' }}>PDF (Strip)</h4>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Cetak ukuran 2R</p>
+                    </div>
+                    <button onClick={handleDownload} className="nav-button-primary" style={{ padding: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Opsi Lain */}
+                  <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    <p style={{ fontSize: '0.8rem', fontWeight: 800, color: '#111', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Opsi Lain</p>
+                    
+                    {/* Print option */}
+                    <div onClick={() => window.print()} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '10px', background: '#ffffff', cursor: 'pointer', hover: {background: '#f9f9f9'} }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5">
+                          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                          <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Cetak Foto (di printer terdekat)
+                      </span>
+                      <span style={{ fontSize: '1rem', color: '#ccc' }}>&gt;</span>
+                    </div>
+
+                    {/* Retake/New Session */}
+                    <div onClick={() => { setShowFinalModal(false); setFinalResultUrl(''); setPaymentStatus('unpaid'); }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '10px', background: '#ffffff', cursor: 'pointer' }}>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#333', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5">
+                          <path d="M23 4v6h-6"></path>
+                          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        Ambil Ulang Foto (Mulai sesi baru)
+                      </span>
+                      <span style={{ fontSize: '1rem', color: '#ccc' }}>&gt;</span>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => { setShowFinalModal(false); setFinalResultUrl(''); handleCancelSession(); }} 
+                    className="btn-secondary" 
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem', fontWeight: 700, marginTop: '0.5rem' }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Kembali ke Beranda
+                  </button>
+
+                </div>
+              </div>
+
+            </div>
+
+            {/* Bottom rating card */}
+            <div className="glass" style={{ width: '100%', padding: '1.5rem', textAlign: 'center', background: '#ffffff', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem', border: '1px solid rgba(0,0,0,0.04)' }}>
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#111' }}>Bagaimana pengalaman kamu?</h4>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>Bantu kami untuk memberikan pengalaman yang lebih baik!</p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'center' }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <svg key={star} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2" style={{ cursor: 'pointer' }}>
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                ))}
               </div>
             </div>
 
-            <button 
-              onClick={() => { setShowFinalModal(false); setFinalResultUrl(''); handleCancelSession(); }} 
-              className="btn-secondary btn-block" 
-              style={{ marginTop: '1rem' }}
-            >
-              Selesai (Kembali)
-            </button>
           </div>
         </div>
       )}
