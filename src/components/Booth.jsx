@@ -19,6 +19,54 @@ const DEFAULT_FRAMES = [
     name: 'Retro Y2K',
     isDefault: true,
     dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%238a2be2" stroke-width="16"/><path d="M 0 0 L 50 0 L 0 50 Z" fill="%23ff007f"/><path d="M 300 0 L 250 0 L 300 50 Z" fill="%2300f0ff"/><path d="M 0 400 L 50 400 L 0 350 Z" fill="%2300f0ff"/><path d="M 300 400 L 250 400 L 300 350 Z" fill="%23ff007f"/><text x="150" y="385" font-family="Outfit, sans-serif" font-weight="900" font-size="14" fill="white" text-anchor="middle" letter-spacing="2">PHOTO BOOTH</text></svg>'
+  },
+  {
+    id: 'theme-world-cup',
+    name: 'World Cup',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%2322c55e" stroke-width="14"/><rect x="8" y="8" width="284" height="384" fill="none" stroke="%23eab308" stroke-width="3"/><circle cx="35" cy="35" r="10" fill="%23eab308"/><circle cx="265" cy="35" r="10" fill="%23eab308"/><circle cx="35" cy="365" r="10" fill="%23eab308"/><circle cx="265" cy="365" r="10" fill="%23eab308"/><text x="150" y="382" font-family="Outfit, sans-serif" font-weight="900" font-size="12" fill="white" text-anchor="middle" letter-spacing="1">WORLD CUP 2026</text></svg>'
+  },
+  {
+    id: 'theme-wavy-creative',
+    name: 'Grid Wavy Creative',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%231e1e1e" stroke-width="12"/><path d="M 0 50 Q 75 25, 150 50 T 300 50" fill="none" stroke="%23e51a24" stroke-width="4"/><path d="M 0 350 Q 75 325, 150 350 T 300 350" fill="none" stroke="%23e51a24" stroke-width="4"/><text x="150" y="380" font-family="Outfit, sans-serif" font-weight="800" font-size="12" fill="%23e51a24" text-anchor="middle" letter-spacing="2">CREATIVE WAVE</text></svg>'
+  },
+  {
+    id: 'theme-cat',
+    name: 'Cute Cat',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%23fda4af" stroke-width="14"/><circle cx="40" cy="40" r="12" fill="%23f43f5e"/><circle cx="30" cy="30" r="6" fill="%23f43f5e"/><circle cx="50" cy="30" r="6" fill="%23f43f5e"/><circle cx="260" cy="40" r="12" fill="%23f43f5e"/><circle cx="250" cy="30" r="6" fill="%23f43f5e"/><circle cx="270" cy="30" r="6" fill="%23f43f5e"/><text x="150" y="382" font-family="Outfit, sans-serif" font-weight="800" font-size="14" fill="%23f43f5e" text-anchor="middle">MEOW MEOW</text></svg>'
+  },
+  {
+    id: 'theme-sakura',
+    name: 'Sakura Blossom',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%23fdf2f8" stroke-width="16"/><circle cx="30" cy="30" r="8" fill="%23fbcfe8"/><circle cx="42" cy="35" r="6" fill="%23fbcfe8"/><circle cx="25" cy="42" r="5" fill="%23fbcfe8"/><circle cx="270" cy="30" r="8" fill="%23fbcfe8"/><circle cx="258" cy="35" r="6" fill="%23fbcfe8"/><text x="150" y="382" font-family="Outfit, sans-serif" font-weight="700" font-size="12" fill="%23db2777" text-anchor="middle" letter-spacing="1">SPRING SAKURA</text></svg>'
+  },
+  {
+    id: 'theme-vaporwave',
+    name: 'Retro Vaporwave',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%2306b6d4" stroke-width="12"/><line x1="0" y1="360" x2="300" y2="360" stroke="%23d946ef" stroke-width="3"/><line x1="60" y1="360" x2="20" y2="400" stroke="%23d946ef" stroke-width="2"/><line x1="120" y1="360" x2="100" y2="400" stroke="%23d946ef" stroke-width="2"/><line x1="180" y1="360" x2="200" y2="400" stroke="%23d946ef" stroke-width="2"/><line x1="240" y1="360" x2="280" y2="400" stroke="%23d946ef" stroke-width="2"/><text x="150" y="350" font-family="Outfit, sans-serif" font-weight="900" font-size="11" fill="%2306b6d4" text-anchor="middle" letter-spacing="3">NEON VIBES</text></svg>'
+  },
+  {
+    id: 'theme-stars',
+    name: 'Y2K Stars',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%23dbeafe" stroke-width="16"/><path d="M 30 20 L 33 27 L 40 28 L 35 33 L 36 40 L 30 36 L 24 40 L 25 33 L 20 28 L 27 27 Z" fill="%23fbbf24"/><path d="M 270 20 L 273 27 L 280 28 L 275 33 L 276 40 L 270 36 L 264 40 L 265 33 L 260 28 L 267 27 Z" fill="%23fbbf24"/><text x="150" y="384" font-family="Outfit, sans-serif" font-weight="900" font-size="14" fill="%232563eb" text-anchor="middle" letter-spacing="2">STARLIGHT</text></svg>'
+  },
+  {
+    id: 'theme-minimalist',
+    name: 'Minimalist Aesthetic',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%231e1e1e" stroke-width="6"/><rect x="10" y="10" width="280" height="380" fill="none" stroke="%231e1e1e" stroke-width="1"/><text x="150" y="380" font-family="serif" font-style="italic" font-weight="500" font-size="12" fill="#333" text-anchor="middle" letter-spacing="4">la simplicite</text></svg>'
+  },
+  {
+    id: 'theme-filmstrip',
+    name: 'Vintage Film Strip',
+    isDefault: true,
+    dataUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect x="0" y="0" width="300" height="400" fill="none" stroke="%2318181b" stroke-width="26"/><rect x="6" y="50" width="14" height="20" rx="3" fill="white"/><rect x="6" y="100" width="14" height="20" rx="3" fill="white"/><rect x="6" y="150" width="14" height="20" rx="3" fill="white"/><rect x="6" y="200" width="14" height="20" rx="3" fill="white"/><rect x="6" y="250" width="14" height="20" rx="3" fill="white"/><rect x="6" y="300" width="14" height="20" rx="3" fill="white"/><rect x="280" y="50" width="14" height="20" rx="3" fill="white"/><rect x="280" y="100" width="14" height="20" rx="3" fill="white"/><rect x="280" y="150" width="14" height="20" rx="3" fill="white"/><rect x="280" y="200" width="14" height="20" rx="3" fill="white"/><rect x="280" y="250" width="14" height="20" rx="3" fill="white"/><rect x="280" y="300" width="14" height="20" rx="3" fill="white"/><text x="150" y="385" font-family="monospace" font-size="10" fill="%23a1a1aa" text-anchor="middle">KODAK 400TX</text></svg>'
   }
 ];
 
