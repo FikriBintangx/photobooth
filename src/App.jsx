@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LandingPage from './components/LandingPage';
 import Booth from './components/Booth';
 import FrameManager from './components/FrameManager';
+import logoImg from './assets/logo.jpg';
 
 function App() {
   const [currentView, setCurrentView] = useState('landing'); // 'landing' | 'booth' | 'manage-frames'
@@ -43,13 +44,20 @@ function App() {
   return (
     <div className="app-container">
       <nav className="navbar">
-        <div className="logo text-gradient-neon" onClick={() => setCurrentView('landing')}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: 'rotate(-10deg)' }}>
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-            <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
-          PicGlow Booth
+        <div className="logo" onClick={() => setCurrentView('landing')} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <img 
+            src={logoImg} 
+            alt="PicGlow Logo" 
+            style={{ 
+              width: '38px', 
+              height: '38px', 
+              borderRadius: '50%', 
+              objectFit: 'cover',
+              border: '2px solid var(--primary)',
+              boxShadow: '0 4px 10px rgba(229, 26, 36, 0.1)'
+            }} 
+          />
+          <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '1.4rem' }}>PicGlow Booth</span>
         </div>
         <div className="nav-links">
           <button 

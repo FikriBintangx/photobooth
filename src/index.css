@@ -197,12 +197,11 @@ body {
   padding: 0.55rem 1.5rem;
   border-radius: 30px;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 4px 15px var(--primary-glow);
+  box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 .nav-button-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(229, 26, 36, 0.4);
+  background: #c3131b;
 }
 
 /* Landing Page styling */
@@ -370,7 +369,18 @@ body {
   align-items: center;
   text-align: center;
   position: relative;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
+  transition: all 0.25s ease;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.feature-item-col:hover {
+  background-color: rgba(229, 26, 36, 0.04);
+}
+
+.feature-item-col:hover .feature-col-icon {
+  transform: rotate(5deg) scale(1.05);
 }
 
 .features-card-horizontal .feature-item-col:not(:last-child)::after {
@@ -395,6 +405,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease;
 }
 
 .feature-col-title {
@@ -422,20 +433,19 @@ body {
   cursor: pointer;
   padding: 1rem 3.5rem;
   border-radius: 50px;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 10px 25px rgba(229, 26, 36, 0.35);
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 25px rgba(229, 26, 36, 0.25);
   display: flex;
   align-items: center;
   gap: 0.8rem;
 }
 
 .btn-cta-pill:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 15px 30px rgba(229, 26, 36, 0.5);
+  background: #c3131b;
 }
 
 .btn-cta-pill:active {
-  transform: translateY(-1px) scale(0.98);
+  transform: scale(0.98);
 }
 
 .sub-cta-text {

@@ -30,7 +30,10 @@ const FILTERS = [
   { id: 'cinematic', name: 'Cinematic', filter: 'contrast(130%) saturate(80%) brightness(90%)' }
 ];
 
-const PHOTO_PRICE = 20000; // Flat price Rp 20.000 for any photo session
+const PHOTO_PRICES = {
+  '1-shot': 15000, // Rp 15.000
+  '4-grid': 20000  // Rp 20.000
+};
 
 export default function Booth({ onBack }) {
   // Payment States
@@ -117,7 +120,7 @@ export default function Booth({ onBack }) {
   const handleProceedToPayment = async () => {
     const newOrderId = `GLOW-${Date.now().toString().slice(-6)}`;
     const randomCent = Math.floor(Math.random() * 99) + 1; // 1-99 cents for uniqueness
-    const finalAmount = PHOTO_PRICE + randomCent;
+    const finalAmount = PHOTO_PRICES[boothMode] + randomCent;
 
     setOrderId(newOrderId);
     setUniqueAmount(finalAmount);
@@ -406,9 +409,9 @@ export default function Booth({ onBack }) {
             <div className="glass" style={{ padding: '1.5rem', textAlign: 'center' }}>
               <h3 className="section-title">Ringkasan Sesi</h3>
               <div style={{ margin: '1rem 0' }}>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Harga Sesi Foto Flat</p>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Harga Sesi Foto</p>
                 <p style={{ fontSize: '2.25rem', fontWeight: 900, color: 'var(--primary)', margin: '0.2rem 0' }}>
-                  Rp {PHOTO_PRICE.toLocaleString('id-ID')}
+                  Rp {PHOTO_PRICES[boothMode].toLocaleString('id-ID')}
                 </p>
                 <p style={{ fontSize: '0.85rem', fontWeight: 600 }}>
                   Frame: {selectedFrame.name}
