@@ -139,37 +139,61 @@ export default function FrameManager({ onBack }) {
             />
           </div>
 
-          <div 
-            className="dropzone"
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-            onClick={() => document.getElementById('fileInput').click()}
-          >
-            <input 
-              type="file" 
-              id="fileInput" 
-              accept="image/png" 
-              onChange={handleFileChange} 
-              style={{ display: 'none' }}
-            />
-            {previewUrl ? (
-              <div style={{ position: 'relative', width: '120px', aspectRatio: '3/4', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-glass)' }}>
-                <img src={previewUrl} alt="Preview Upload" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <input 
+            type="file" 
+            id="fileInput" 
+            accept="image/png" 
+            onChange={handleFileChange} 
+            style={{ display: 'none' }}
+          />
+
+          {previewUrl ? (
+            <div className="glass" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: '1px solid var(--primary)' }}>
+              <div 
+                style={{ 
+                  position: 'relative', 
+                  width: '160px', 
+                  aspectRatio: '3/4', 
+                  borderRadius: '12px', 
+                  overflow: 'hidden', 
+                  border: '2px solid var(--border-glass)',
+                  backgroundImage: 'linear-gradient(45deg, #e0e0e0 25%, transparent 25%), linear-gradient(-45deg, #e0e0e0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e0e0e0 75%), linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)',
+                  backgroundSize: '20px 20px',
+                  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+                  backgroundColor: '#ffffff'
+                }}
+              >
+                <img src={previewUrl} alt="Preview Upload" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </div>
-            ) : (
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <button 
+                type="button" 
+                onClick={() => document.getElementById('fileInput').click()} 
+                className="btn-secondary" 
+                style={{ padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 600 }}
+              >
+                Ganti Gambar
+              </button>
+            </div>
+          ) : (
+            <div 
+              className="dropzone"
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onClick={() => document.getElementById('fileInput').click()}
+            >
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-            )}
-            <div>
-              <p style={{ fontWeight: 600 }}>Tarik & Lepaskan File PNG Anda di sini</p>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-                atau klik untuk memilih file dari komputer Anda (PNG saja)
-              </p>
+              <div>
+                <p style={{ fontWeight: 700 }}>Tarik & Lepaskan File PNG Anda di sini</p>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                  atau klik untuk memilih file dari komputer Anda (PNG transparan saja)
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           {error && <p style={{ color: '#ff4444', fontSize: '0.9rem', fontWeight: 500 }}>{error}</p>}
 
