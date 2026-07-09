@@ -334,7 +334,10 @@ export default function Booth({ onBack }) {
 
           ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(photoImg, paddingLeft, paddingTop, width, height);
+          // Crop source photo (4:3 landscape) to 3:4 portrait to prevent squishing
+          const sourceWidth = photoImg.height * (3 / 4);
+          const sourceX = (photoImg.width - sourceWidth) / 2;
+          ctx.drawImage(photoImg, sourceX, 0, sourceWidth, photoImg.height, paddingLeft, paddingTop, width, height);
           ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
 
           setFinalResultUrl(canvas.toDataURL('image/png'));
