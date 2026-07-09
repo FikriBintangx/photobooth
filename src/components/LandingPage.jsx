@@ -39,7 +39,7 @@ export default function LandingPage({ onStartBooth, onManageFrames }) {
       </h2>
 
       {/* Features card horizontal */}
-      <div className="features-card-horizontal glass" style={{ zIndex: 10, maxWidth: '1100px', width: '100%' }}>
+      <div className="features-card-horizontal glass" style={{ zIndex: 10, maxWidth: '1250px', width: '100%' }}>
         <div className="feature-item-col">
           <div className="feature-col-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
